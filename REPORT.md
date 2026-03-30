@@ -19,4 +19,10 @@
 * **เหตุผลที่ต้องเก็บ Configuration ไว้ใน Backend:** เราจำเป็นต้องเก็บข้อมูลที่เป็นความลับ เช่น `SECRET_TOKEN` หรือพอร์ตการเชื่อมต่อ ไว้ในไฟล์ `.env` ที่ฝั่ง Backend เสมอ เพื่อให้ข้อมูลความลับเหล่านี้อยู่บนเซิร์ฟเวอร์อย่างปลอดภัยและไม่ถูกเปิดเผยสู่สาธารณะ
 * **ความเสี่ยงหากเก็บไว้ใน Frontend:** โค้ด Frontend ทั้งหมดจะต้องถูกดาวน์โหลดไปประมวลผลที่เครื่องของผู้ใช้ (Browser) หากเราใส่ข้อมูลความลับจำพวก API Keys หรือ Token ไว้ในโค้ด Frontend ผู้ใช้ทุกคนจะสามารถเข้าถึงรหัสผ่านเหล่านั้นได้อย่างง่ายดายผ่านการดู "Page Source" หรือใช้ Developer Tools ซึ่งอาจนำไปสู่การถูกขโมยสิทธิ์เพื่อเข้าไปลบข้อมูลหรือเจาะระบบของเราได้
 
+## 5. Cloud Deployment & HTTPS (Bonus)
+โปรเจกต์นี้ได้รับการออกแบบให้สามารถ Deploy ขึ้น Cloud Host Provider (เช่น Render หรือ Vercel) ได้ กระบวนการมีดังนี้:
+1. **แยกการ Deploy:** นำโค้ดฝั่ง Backend (Node.js) ไป Deploy เป็น Web Service (เช่น บน Render.com) และนำฝั่ง Frontend ไป Deploy บนบริการ Static Site (เช่น Vercel หรือ GitHub Pages)
+2. **Environment Variables:** ในหน้า Dashboard ของ Cloud Provider เราจะตั้งค่าตัวแปร `PORT`, `SECRET_TOKEN` และ `POCKETHOST_TOKEN` ไว้ใน Environment Setting เพื่อไม่ให้ความลับหลุดไปอยู่ใน Source Code
+3. **HTTPS โดยอัตโนมัติ:** Cloud Provider เหล่านี้จะบังคับใช้และออก Certificate `HTTPS` ให้อัตโนมัติ (Automated TLS/SSL) ซึ่งตรงกับเงื่อนไขการนำไปใช้จริงบน Production เพื่อเข้ารหัสข้อมูล Headers และ Payloads ทั้งหมดระหว่าง Frontend และ Backend
+
 *(หมายเหตุ: ในการทดสอบโปรเจกต์นี้ อาจมีการจำลองใส่ Token ลงในตัวแปรฝั่ง Frontend เพื่อความสะดวกในการทดสอบ แต่ในระบบจริง Token ควรได้มาจากการ Login ของผู้ใช้ ไม่ใช่การ Hardcode ลงใน Source Code)*
